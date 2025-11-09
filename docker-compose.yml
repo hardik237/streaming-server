@@ -9,22 +9,23 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - mongo_data:/data/db
-    networks:
-      - streaming-net
+    # networks:
+    #   - streaming-net
+    network_mode: "host"
 
   streaming:
     build: ./streaming
     image: hardik23398/streaming-server:latest
     container_name: streaming-service
     restart: unless-stopped
-    ports:
-      - "5001:5000"      # Flask API
-      - "1935:1935"      # RTMP
-      - "8554:8554"      # RTSP
-      - "8888:8888"      # HLS
-      - "8889:8889"      # WebRTC
-      - "9997:9997"      # MediaMTX API
-      - "9996:9996"      # MediaMTX Playback
+    # ports:
+    #   - "5001:5000"      # Flask API
+    #   - "1935:1935"      # RTMP
+    #   - "8554:8554"      # RTSP
+    #   - "8888:8888"      # HLS
+    #   - "8889:8889"      # WebRTC
+    #   - "9997:9997"      # MediaMTX API
+    #   - "9996:9996"      # MediaMTX Playback
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
@@ -35,13 +36,14 @@ services:
       - /dev/video0:/dev/video0   # Adjust based on your webcam
     privileged: true     # Required for webcam access
     environment:
-      MONGO_URI: mongodb://admin:changeme@mongo:27017
-      DB_NAME: streaming
+      MONGO_URI: mongodb://localhost:27017
+      MONGODB_DB: video_streaming
       MEDIAMTX_API: http://localhost:9997
     depends_on:
       - mongo
-    networks:
-      - streaming-net
+    # networks:
+    #   - streaming-net
+    network_mode: "host"
     # command: ["/bin/bash", "-c", "tail -f /dev/null"]
 
   ui:
@@ -56,11 +58,12 @@ services:
     ports:
       - "8501:8501"
     environment:
-      STREAMING_SERVICE_URL: http://streaming:5000
+      STREAMING_SERVICE_URL: http://localhost:5000
     depends_on:
       - streaming
-    networks:
-      - streaming-net
+    # networks:
+    #   - streaming-net
+    network_mode: "host"
     # command: ["/bin/bash", "-c", "tail -f /dev/null"]
   
   mediamtx-rtsp-server:
@@ -74,8 +77,9 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - ./resources/streams/mediamtx.yml:/mediamtx.yml
       - ./resources/streams:/streams
-    networks:
-      - streaming-net
+    # networks:
+    #   - streaming-net
+    network_mode: "host"
 
 networks:
   streaming-net:

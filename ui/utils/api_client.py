@@ -4,7 +4,7 @@ API client for communicating with streaming-service
 import requests
 import os
 
-STREAMING_SERVICE_URL = os.getenv("STREAMING_SERVICE_URL", "http://streaming:5000")
+STREAMING_SERVICE_URL = os.getenv("STREAMING_SERVICE_URL", "http://localhost:5000")
 
 def create_stream(stream_id, source_type, source):
     """Create a new stream"""

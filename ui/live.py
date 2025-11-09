@@ -4,6 +4,7 @@ Stream source selection (WebCam or IP Camera)
 """
 import streamlit as st
 import utils.api_client as api_client
+from utils.utils import get_system_ip_address
 
 print("UI App - Index Page Loaded")
 
@@ -23,8 +24,8 @@ if source_type == "WebCam":
 elif source_type == "IP Camera (RTSP)":
     rtsp_url = st.text_input(
         "RTSP URL:", 
-        value="rtsp://mediamtx-rtsp-server:9554/person",
-        placeholder="rtsp://mediamtx-rtsp-server:9554/person",
+        value="rtsp://0.0.0.0:9554/person",
+        placeholder="rtsp://0.0.0.0:9554/person",
         help="Enter the complete RTSP URL including credentials if needed"
     )
     source = rtsp_url
@@ -93,7 +94,7 @@ try:
                     st.write(f"🔴 {stream.get('status', '')}")
             with cols[4]:
                 webrtc_path = stream.get('webrtc_path', '')
-                st.link_button("▶️", url=f"http://localhost:8889/{webrtc_path}", type="secondary", use_container_width=False)
+                st.link_button("▶️", url=f"http://{get_system_ip_address()}:8889/{webrtc_path}", type="secondary", use_container_width=False)
             with cols[5]:
                 st.button("🛑", key=f"stop_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.stop_stream(sid))
             with cols[6]:

@@ -16,7 +16,7 @@ def get_db():
     global _client, _db
     
     if _db is None:
-        mongo_uri = os.getenv('MONGODB_URI', 'mongodb://mongo:27017/')
+        mongo_uri = os.getenv('MONGO_URI', 'mongodb://localhost:27017/')
         db_name = os.getenv('MONGODB_DB', 'video_streaming')
         
         logger.info(f"Connecting to MongoDB: {mongo_uri}")

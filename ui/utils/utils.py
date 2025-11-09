@@ -21,3 +21,17 @@ def convert_to_iso_standard(time_obj):
 
     return iso
 
+def get_system_ip_address():
+    """Get the system's IP address"""
+    import socket
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # Connect to a public IP address; doesn't actually send data
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]  # Get the IP assigned to this socket
+    except Exception:
+        ip = '127.0.0.1'  # fallback to localhost
+    finally:
+        s.close()
+    return ip
+

@@ -1,7 +1,7 @@
 import datetime
 import streamlit as st
 import utils.api_client as api_client
-from utils.utils import convert_to_iso_standard
+from utils.utils import convert_to_iso_standard, get_system_ip_address
 import time
 
 st.set_page_config(page_title="Playback", page_icon="📹", layout="wide")
@@ -70,6 +70,7 @@ try:
                     if record:
                         st.success(f"Found {len(recordings)} recordings")
                         playback_url = record.get("url", "")
+                        playback_url = playback_url.replace("http://localhost", f"http://{get_system_ip_address()}")
                         st.video(playback_url, autoplay=True, width=700)
                     
                 except Exception as e:
