@@ -1,0 +1,11 @@
+flask
+pymongo
+numpy
+PyGObject
+requests
+
+# ultralytics==8.0.200
+# opencv-python==4.8.1.78
+# torch==2.1.0
+# torchvision==0.16.0
+# Pillow==10.1.0

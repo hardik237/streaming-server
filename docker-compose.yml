@@ -12,6 +12,7 @@ services:
 
   streaming:
     build: ./streaming
+    image: streaming-server:latest
     container_name: streaming-service
     restart: unless-stopped
     ports:
@@ -41,6 +42,7 @@ services:
 
   ui:
     build: ./ui
+    image: streaming-ui:latest
     container_name: streaming-ui
     restart: unless-stopped
     volumes:
@@ -48,12 +50,9 @@ services:
     ports:
       - "8501:8501"
     environment:
-      MONGO_URI: mongodb://admin:changeme@mongo:27017
-      DB_NAME: streaming
       STREAMING_SERVICE_URL: http://streaming:5000
     depends_on:
       - streaming
-      - mongo
     networks:
       - streaming-net
     command: ["/bin/bash", "-c", "tail -f /dev/null"]
@@ -69,7 +68,6 @@ services:
       - ./resources/streams:/streams
     networks:
       - streaming-net
-    # command: ["-c", "/mediamtx.yml"]
 
 networks:
   streaming-net:
