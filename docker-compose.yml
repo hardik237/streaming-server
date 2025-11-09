@@ -42,7 +42,7 @@ services:
       - mongo
     networks:
       - streaming-net
-    command: ["/bin/bash", "-c", "tail -f /dev/null"]
+    # command: ["/bin/bash", "-c", "tail -f /dev/null"]
 
   ui:
     build: ./ui
@@ -61,7 +61,7 @@ services:
       - streaming
     networks:
       - streaming-net
-    command: ["/bin/bash", "-c", "tail -f /dev/null"]
+    # command: ["/bin/bash", "-c", "tail -f /dev/null"]
   
   mediamtx-rtsp-server:
     image: bluenviron/mediamtx:1-ffmpeg

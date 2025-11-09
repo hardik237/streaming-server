@@ -67,8 +67,8 @@ try:
     
     # create a table view
     # Define your column headers and widths
-    headers = ["ID", "Type", "Source", "Status", "Created", "WebRTC", "Recording", "Stop", "Restart", "Delete"]
-    col_widths = [1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1]  # Adjust widths as needed
+    headers = ["ID", "Type", "Source", "Status", "WebRTC", "Stop", "Restart", "Delete"]
+    col_widths = [1, 1, 2, 1, 1, 1, 1, 1]  # Adjust widths as needed
 
     # Create columns dynamically
     cols = st.columns(col_widths, border=True)
@@ -92,17 +92,13 @@ try:
                 else:
                     st.write(f"🔴 {stream.get('status', '')}")
             with cols[4]:
-                st.write(stream.get("created_at", ""))
-            with cols[5]:
                 webrtc_path = stream.get('webrtc_path', '')
                 st.link_button("▶️", url=f"http://localhost:8889/{webrtc_path}", type="secondary", use_container_width=False)
-            with cols[6]:
-                st.link_button("💾", url="", type="secondary", use_container_width=False)
-            with cols[7]:
+            with cols[5]:
                 st.button("🛑", key=f"stop_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.stop_stream(sid))
-            with cols[8]:
+            with cols[6]:
                 st.button("🔄", key=f"restart_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.restart_stream(sid))
-            with cols[9]:
+            with cols[7]:
                 st.button("🗑️", key=f"delete_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.delete_stream(sid))
 
 except Exception as e:
