@@ -1,1 +1,1 @@
-sudo docker build -t streaming-ui:latest .
+sudo docker build -t hardik23398/streaming-ui:latest .

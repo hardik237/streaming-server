@@ -14,7 +14,7 @@ services:
 
   streaming:
     build: ./streaming
-    image: streaming-server:latest
+    image: hardik23398/streaming-server:latest
     container_name: streaming-service
     restart: unless-stopped
     ports:
@@ -46,7 +46,7 @@ services:
 
   ui:
     build: ./ui
-    image: streaming-ui:latest
+    image: hardik23398/streaming-ui:latest
     container_name: streaming-ui
     restart: unless-stopped
     volumes:

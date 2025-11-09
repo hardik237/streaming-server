@@ -1,1 +1,1 @@
-sudo docker build -t streaming-server:latest .
+sudo docker build -t hardik23398/streaming-server:latest .
