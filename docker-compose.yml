@@ -1,0 +1,79 @@
+services:
+  mongo:
+    image: mongo:6.0
+    container_name: streaming-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - streaming-net
+
+  streaming:
+    build: ./streaming
+    container_name: streaming-service
+    restart: unless-stopped
+    ports:
+      - "5001:5000"      # Flask API
+      - "1935:1935"      # RTMP
+      - "8554:8554"      # RTSP
+      - "8888:8888"      # HLS
+      - "8889:8889"      # WebRTC
+      - "9997:9997"      # MediaMTX API
+      - "9996:9996"      # MediaMTX Playback
+    volumes:
+      - ./streaming:/app
+      - ./recordings:/recordings
+      - /dev:/dev        # For webcam access
+    devices:
+      - /dev/video0:/dev/video0   # Adjust based on your webcam
+    privileged: true     # Required for webcam access
+    environment:
+      MONGO_URI: mongodb://admin:changeme@mongo:27017
+      DB_NAME: streaming
+      MEDIAMTX_API: http://localhost:9997
+    depends_on:
+      - mongo
+    networks:
+      - streaming-net
+    command: ["/bin/bash", "-c", "tail -f /dev/null"]
+
+  ui:
+    build: ./ui
+    container_name: streaming-ui
+    restart: unless-stopped
+    volumes:
+      - ./ui:/app
+    ports:
+      - "8501:8501"
+    environment:
+      MONGO_URI: mongodb://admin:changeme@mongo:27017
+      DB_NAME: streaming
+      STREAMING_SERVICE_URL: http://streaming:5000
+    depends_on:
+      - streaming
+      - mongo
+    networks:
+      - streaming-net
+    command: ["/bin/bash", "-c", "tail -f /dev/null"]
+  
+  mediamtx-rtsp-server:
+    image: bluenviron/mediamtx:1-ffmpeg
+    container_name: mediamtx-rtsp-server
+    restart: unless-stopped
+    ports:
+      - "9554:9554"    # RTSP
+    volumes:
+      - ./resources/streams/mediamtx.yml:/mediamtx.yml
+      - ./resources/streams:/streams
+    networks:
+      - streaming-net
+    # command: ["-c", "/mediamtx.yml"]
+
+networks:
+  streaming-net:
+    driver: bridge
+
+volumes:
+  mongo_data:

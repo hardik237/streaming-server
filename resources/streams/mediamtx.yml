@@ -1,0 +1,49 @@
+# Verbosity of the program; available values are "error", "warn", "info", "debug".
+logLevel: info
+# Destinations of log messages; available values are "stdout", "file" and "syslog".
+logDestinations: [stdout]
+# If "file" is in logDestinations, this is the file which will receive the logs.
+logFile: mediamtx.log
+# If "syslog" is in logDestinations, use prefix for logs.
+sysLogPrefix: mediamtx
+
+# Timeout of read operations.
+readTimeout: 10s
+# Timeout of write operations.
+writeTimeout: 10s
+# Size of the queue of outgoing packets.
+# A higher value allows to increase throughput, a lower value allows to save RAM.
+writeQueueSize: 512
+# Maximum size of outgoing UDP packets.
+# This can be decreased to avoid fragmentation on networks with a low UDP MTU.
+udpMaxPayloadSize: 1472
+
+api: no
+metrics: no
+metricsEncryption: no
+pprof: no
+playback: no
+
+rtsp: yes
+rtspTransports: [udp, multicast, tcp]
+rtspEncryption: "no"
+rtspAddress: :9554
+rtspsAddress: :8322
+
+rtmp: no
+hls: no
+webrtc: no
+srt: no
+
+paths:
+  person:
+    runOnDemand: ffmpeg -re -stream_loop -1 -i /streams/person.mp4 -c copy -f rtsp rtsp://localhost:9554/$MTX_PATH
+    runOnDemandRestart: yes
+    runOnDemandCloseAfter: 10s
+
+  vehicle:
+    runOnDemand: ffmpeg -re -stream_loop -1 -i /streams/vehicle.mp4 -c copy -f rtsp rtsp://localhost:9554/$MTX_PATH
+    runOnDemandRestart: yes
+    runOnDemandCloseAfter: 10s
+
+  all_others:
