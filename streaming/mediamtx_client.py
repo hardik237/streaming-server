@@ -12,6 +12,7 @@ class MediaMTXClient:
     
     def __init__(self, api_url="http://localhost:9997"):
         self.api_url = api_url
+        self.playback_url = "http://localhost:9996"
         self.session = requests.Session()
     
     def get_paths(self):
@@ -44,10 +45,21 @@ class MediaMTXClient:
             logger.error(f"Error getting recordings: {e}")
             return None
     
-    def get_path_recordings(self, path_name):
+    def get_path_recordings(self, path_name, start_time=None, end_time=None):
         """Get recordings for a specific path"""
         try:
-            response = self.session.get(f"{self.api_url}/v3/recordings/get/{path_name}")
+            print(f"Getting recordings for path {path_name} via MediaMTXClient...")
+            # http://localhost:9996/list?path=[mypath]&start=[start]&end=[end]
+            
+            print(f"path={path_name}&start={start_time}&end={end_time}")
+            response = self.session.get(f"{self.playback_url}/list", 
+                                        params={
+                                            "path": path_name,
+                                            "start": start_time,
+                                            "end": end_time
+                                        }
+                                        )
+            print("Get Path Recordings Response:", response)
             response.raise_for_status()
             return response.json()
         except Exception as e:

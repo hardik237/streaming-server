@@ -91,6 +91,22 @@ def get_all_streams():
         return response.json()
     except Exception as e:
         return {"error": str(e)}
+
+def get_recordings(stream_id, start_time=None, end_time=None):
+    """Get recordings for a specific stream"""
+    try:
+        print(f"Getting recordings for stream {stream_id} via API client...")
+        print(f"### start_time={start_time}, end_time={end_time}")
+        response = requests.get(
+            f"{STREAMING_SERVICE_URL}/internal/streams/get_recordings",
+            params={"stream_id": stream_id, "start_time": start_time, "end_time": end_time},
+            timeout=10
+        )
+        print("Get Recordings Response:", response.text)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        return {"error": str(e)}
     
 def flush_db():
     """Flush the database (for testing purposes)"""

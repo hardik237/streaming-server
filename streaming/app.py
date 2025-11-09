@@ -1,6 +1,17 @@
 """
 Flask REST API for streaming-service
-Manages stream lifecycle, recording, and AI controls
+The API server provides following endpoints:
+
+- Health Check: /health
+- Start Stream: /internal/streams/start
+- Stop Stream: /internal/streams/stop
+- Restart Stream: /internal/streams/restart
+- Delete Stream: /internal/streams/delete
+- Stop All Streams: /internal/streams/stop_all
+- Get All Streams: /internal/streams/get_all_streams
+- Get Recordings: /internal/streams/get_recordings
+- Flush Database: /internal/streams/flush_db
+
 """
 from flask import Flask, request, jsonify
 import os
@@ -10,6 +21,7 @@ from utils.db import get_db, ensure_indexes
 import utils.utils as utils
 from pipeline import PipelineController
 from mediamtx_client import MediaMTXClient
+import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -223,6 +235,33 @@ def get_all_streams():
     except Exception as e:
         logger.error(f"Error fetching streams: {e}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/internal/streams/get_recordings', methods=['GET'])
+def get_recordings():
+    """Get recordings for a specific stream/path"""
+    try:
+        stream_id = request.args.get('stream_id')
+        start_time = request.args.get('start_time')
+        end_time = request.args.get('end_time')
+        
+        logger.info(f"Received request to get recordings for stream: {stream_id}")
+        
+        if not stream_id:
+            return jsonify({"error": "stream_id required"}), 400
+                
+        logger.info(f"Fetching recordings for stream {stream_id}")
+        recordings = mediamtx_client.get_path_recordings(stream_id, start_time, end_time)
+        print("Recordings fetched:", recordings)
+        if recordings is None:
+            return jsonify({"error": "Could not fetch recordings"}), 500
+        
+        return jsonify(recordings)
+        
+    except Exception as e:
+        traceback = sys.exc_info()[2]
+        logger.error(f"Error getting recordings for stream: {e} at line {traceback.tb_lineno}")
+        return jsonify({"error": str(e)}), 500
+    
 
 @app.route('/internal/streams/flush_db', methods=['POST'])
 def flush_db_endpoint():

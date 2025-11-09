@@ -6,6 +6,8 @@ services:
     ports:
       - "27017:27017"
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - mongo_data:/data/db
     networks:
       - streaming-net
@@ -24,6 +26,8 @@ services:
       - "9997:9997"      # MediaMTX API
       - "9996:9996"      # MediaMTX Playback
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - ./streaming:/app
       - ./recordings:/recordings
       - /dev:/dev        # For webcam access
@@ -46,6 +50,8 @@ services:
     container_name: streaming-ui
     restart: unless-stopped
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - ./ui:/app
     ports:
       - "8501:8501"
@@ -64,6 +70,8 @@ services:
     ports:
       - "9554:9554"    # RTSP
     volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
       - ./resources/streams/mediamtx.yml:/mediamtx.yml
       - ./resources/streams:/streams
     networks:

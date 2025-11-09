@@ -1,6 +1,5 @@
 """
-GStreamer pipeline controller with AI integration
-Manages passthrough and AI-enabled pipelines
+GStreamer pipeline controller 
 """
 import gi
 gi.require_version('Gst', '1.0')
@@ -85,6 +84,7 @@ class PipelineController:
         decodebin ! 
         videoconvert ! 
         video/x-raw,format=I420 ! 
+        clockoverlay time-format="%Y-%m-%d %H:%M:%S" halignment=right valignment=bottom shaded-background=true !
         x264enc bitrate=2000 speed-preset=ultrafast tune=zerolatency ! 
         flvmux streamable=true ! 
         rtmpsink location={self.rtmp_base}/{webrtc_path}

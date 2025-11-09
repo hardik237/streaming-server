@@ -8,10 +8,6 @@ import utils.api_client as api_client
 print("UI App - Index Page Loaded")
 
 st.set_page_config(page_title="Live Streaming Solution", page_icon="📹", layout="wide")
-
-print("### After restart")
-print(st.session_state)
-
 st.title("Live Video Streaming Solution")
 st.markdown("---")
 
@@ -34,50 +30,40 @@ elif source_type == "IP Camera (RTSP)":
     source = rtsp_url
 
 # Create stream button
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    if st.button("Add Stream", type="primary", use_container_width=True):
-        if stream_id == "":
-            st.error("Please enter a Stream ID")
-        
-        if source_type == "IP Camera (RTSP)" and not rtsp_url:
-            st.error("Please enter an RTSP URL")
-        else:
-            with st.spinner("Starting stream..."):
-                try:
+# col1, col2, col3 = st.columns([1, 2, 1])
+    
+if st.button("Add Stream", type="primary", use_container_width=True):
+    if stream_id == "":
+        st.error("Please enter a Stream ID")
+    
+    if source_type == "IP Camera (RTSP)" and not rtsp_url:
+        st.error("Please enter an RTSP URL")
+    else:
+        with st.spinner("Starting stream..."):
+            try:
+                
+                # Create stream via API
+                response = api_client.create_stream(
+                    stream_id=stream_id,
+                    source_type="webcam" if source_type == "WebCam" else "rtsp",
+                    source=source,
+                )
+                
+                print("Create Stream Response:", response)
+                
+                if response and response.get("status") == "live":
+                    st.success(f"Stream started successfully!")
+                    st.info(f"Stream ID: {stream_id}")
+                else:
+                    st.error(f"Failed to start stream: {response.get('error', 'Unknown error')}")
                     
-                    # Create stream via API
-                    response = api_client.create_stream(
-                        stream_id=stream_id,
-                        source_type="webcam" if source_type == "WebCam" else "rtsp",
-                        source=source,
-                    )
-                    
-                    print("Create Stream Response:", response)
-                    
-                    if response and response.get("status") == "live":
-                        
-                        st.success(f"Stream started successfully!")
-                        st.info(f"Stream ID: {stream_id}")
-                        
-                        webrtc_url = response.get("webrtc_url", "")
-                        # webrtc_url = webrtc_url.replace("localhost", get_ip_address())
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
 
-                        st.link_button("Go to Live View", url=webrtc_url, type="primary", use_container_width=True)
-
-                    else:
-                        st.error(f"Failed to start stream: {response.get('error', 'Unknown error')}")
-                        
-                except Exception as e:
-                    st.error(f"Error: {str(e)}")
-
-st.markdown("---")
+st.divider()
 
 try:
     streams = api_client.get_all_streams()
-    
-    print("### After get streams")
-    print(st.session_state)
     
     # create a table view
     # Define your column headers and widths
@@ -111,7 +97,6 @@ try:
                 webrtc_path = stream.get('webrtc_path', '')
                 st.link_button("▶️", url=f"http://localhost:8889/{webrtc_path}", type="secondary", use_container_width=False)
             with cols[6]:
-                # TODO
                 st.link_button("💾", url="", type="secondary", use_container_width=False)
             with cols[7]:
                 st.button("🛑", key=f"stop_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.stop_stream(sid))
@@ -119,22 +104,18 @@ try:
                 st.button("🔄", key=f"restart_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.restart_stream(sid))
             with cols[9]:
                 st.button("🗑️", key=f"delete_{stream.get('stream_id', '')}", on_click=lambda sid=stream.get("stream_id", ""): api_client.delete_stream(sid))
-                
 
 except Exception as e:
     st.warning(f"Could not load active streams: {str(e)}")
-
-
     
-st.markdown("---")
+st.divider()
 
 st.button("Stop All Streams", type="primary", use_container_width=True, on_click=api_client.stop_all_streams)
 st.button("Flush Database", type="primary", use_container_width=True, on_click=api_client.flush_db)
-    
 
-    
+st.divider()
 
-st.markdown("###Instructions")
+st.header("Instructions")
 st.markdown("""
 1. **WebCam**: Select your local webcam device
 2. **IP Camera**: Enter the RTSP URL of your IP camera

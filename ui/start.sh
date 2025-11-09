@@ -1,2 +1,2 @@
 # start streamlit ui
-streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+streamlit run live.py --server.port 8501 --server.address 0.0.0.0
