@@ -4,9 +4,13 @@
 
 A containerized live video streaming solution built with:
 - **Streamlit UI/Backend** - Web interface for stream control and viewing
-- **Streaming-Service** - GStreamer-based pipeline with integrated AI, MediaMTX integration
-- **MongoDB** - NoSQL database for streams, recordings, detections metadata
-- **MediaMTX** - WebRTC/HLS/RTMP protocol server for live delivery and recording
+- **Streaming-Service** 
+  - **Python Flask** based REST server
+  - **Gstreamer**: Managing video pipelines, transcoding, timestamp, overlay, etc
+  - **MediaMTX** - WebRTC/HLS/RTMP protocol server for live delivery and playback, with proxy support
+  - **Python Ultralytics**: Object detection using 'yolov8n' model on decoded frames
+- **MongoDB** - NoSQL database for streams, recordings, and detections metadata
+
 
 **Core Flow:**
 ```
@@ -80,7 +84,7 @@ Camera/RTSP → GStreamer (decode→AI→overlay→encode) → MediaMTX (RTMP) �
    - Launches pipeline and monitors state
 
 3. **MediaMTX Integration:**
-   - Runs MediaMTX as separate process
+   - Runs MediaMTX as a separate process
    - Python code pushes RTMP to `rtmp://localhost:1935/{stream_id}`
    - MediaMTX config enables WebRTC, HLS, and recording
    - Converts RTMP to WebRTC and also records to disk
@@ -109,6 +113,7 @@ Camera/RTSP → GStreamer (decode→AI→overlay→encode) → MediaMTX (RTMP) �
    appsink name=ai_sink emit-signals=true max-buffers=1 drop=true sync=false
 
    Appsink callback -> AI Processing (YOLOv8) -> Overlay boxes -> Encode -> RTMP (using ffmpeg)
+```
 
 ### 3.3 MongoDB
 
