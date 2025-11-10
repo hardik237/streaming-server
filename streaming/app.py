@@ -50,6 +50,7 @@ def start_stream():
         stream_id = data.get('stream_id')
         source_type = data.get('type')  # 'webcam' or 'rtsp'
         source = data.get('source')
+        ai_processing = data.get('ai_processing', False)
         
         if utils.check_stream_exists(stream_id):
             return jsonify({"error": "Stream ID already exists"}), 400
@@ -66,6 +67,7 @@ def start_stream():
             "stream_id": stream_id,
             "source_type": source_type,
             "source_spec": {"device": source} if source_type == "webcam" else {"rtsp_url": source},
+            "ai_processing": ai_processing,
             "status": "starting",
             "webrtc_path": webrtc_path,
             "created_at": db.current_time(),
@@ -80,7 +82,7 @@ def start_stream():
             source_type=source_type,
             source=source,
             webrtc_path=webrtc_path,
-            ai_enabled=False
+            ai_processing=ai_processing
         )
         
         # Update status
@@ -149,6 +151,7 @@ def restart_stream():
         source_spec = stream.get("source_spec", {})
         source = source_spec.get("device") if source_type == "webcam" else source_spec.get("rtsp_url")
         webrtc_path = stream.get("webrtc_path")
+        ai_processing = stream.get("ai_processing", False)
         
         # Stop existing pipeline if any
         pipeline_controller.stop_pipeline(stream_id)
@@ -159,7 +162,7 @@ def restart_stream():
             source_type=source_type,
             source=source,
             webrtc_path=webrtc_path,
-            ai_enabled=False
+            ai_processing=ai_processing
         )
         
         # Update status

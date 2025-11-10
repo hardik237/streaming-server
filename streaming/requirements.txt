@@ -1,11 +1,11 @@
 flask
 pymongo
-numpy
-PyGObject
-requests
+PyGObject==3.42.0
 
-# ultralytics==8.0.200
-# opencv-python==4.8.1.78
-# torch==2.1.0
-# torchvision==0.16.0
-# Pillow==10.1.0
+# Already included in ultralytics/ultralytics:8.3.227-cpu base image:
+# - ultralytics
+# - torch
+# - numpy
+# - opencv-python
+# - Pillow
+# - requests

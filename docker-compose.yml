@@ -15,7 +15,7 @@ services:
 
   streaming:
     build: ./streaming
-    image: hardik23398/streaming-server:latest
+    image: hardik23398/streaming-server-ai:latest
     container_name: streaming-service
     restart: unless-stopped
     # ports:
@@ -44,7 +44,7 @@ services:
     # networks:
     #   - streaming-net
     network_mode: "host"
-    # command: ["/bin/bash", "-c", "tail -f /dev/null"]
+    command: ["/bin/bash", "-c", "tail -f /dev/null"]
 
   ui:
     build: ./ui

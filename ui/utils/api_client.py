@@ -6,7 +6,7 @@ import os
 
 STREAMING_SERVICE_URL = os.getenv("STREAMING_SERVICE_URL", "http://localhost:5000")
 
-def create_stream(stream_id, source_type, source):
+def create_stream(stream_id, source_type, source, ai_processing=False):
     """Create a new stream"""
     try:
         print("Creating stream via API client...")
@@ -16,6 +16,7 @@ def create_stream(stream_id, source_type, source):
                 "stream_id": stream_id,
                 "type": source_type,
                 "source": source,
+                "ai_processing": ai_processing
             },
             timeout=10
         )

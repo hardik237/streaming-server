@@ -16,6 +16,7 @@ st.markdown("---")
 st.subheader("Select Video Source")
 source_type = st.radio("Source Type:", ["WebCam", "IP Camera (RTSP)"], horizontal=True)
 stream_id = st.text_input("Stream ID:", value="cam_1", placeholder="e.g., Test_cam_1")
+ai_processing = st.checkbox("Enable AI Processing")
 
 if source_type == "WebCam":
     # Simple device selection - can be enhanced to list available devices
@@ -30,8 +31,6 @@ elif source_type == "IP Camera (RTSP)":
     )
     source = rtsp_url
 
-# Create stream button
-# col1, col2, col3 = st.columns([1, 2, 1])
     
 if st.button("Add Stream", type="primary", use_container_width=True):
     if stream_id == "":
@@ -48,6 +47,7 @@ if st.button("Add Stream", type="primary", use_container_width=True):
                     stream_id=stream_id,
                     source_type="webcam" if source_type == "WebCam" else "rtsp",
                     source=source,
+                    ai_processing=ai_processing
                 )
                 
                 print("Create Stream Response:", response)
