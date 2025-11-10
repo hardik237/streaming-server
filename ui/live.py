@@ -55,6 +55,8 @@ if st.button("Add Stream", type="primary", use_container_width=True):
                 if response and response.get("status") == "live":
                     st.success(f"Stream started successfully!")
                     st.info(f"Stream ID: {stream_id}")
+                    if ai_processing:
+                        st.warning(f"AI Processing: Enabled, Stream might take some time to start")
                 else:
                     st.error(f"Failed to start stream: {response.get('error', 'Unknown error')}")
                     

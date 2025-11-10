@@ -81,6 +81,7 @@ streaming-server/
 │   ├── start.sh                 # Startup script (MediaMTX + Flask)
 │   ├── app.py                   # Flask REST API
 │   ├── pipeline.py              # GStreamer pipeline controller
+│   ├── ai_processor.py          # Ultralytics YOLOv8 AI processing
 │   ├── mediamtx.yml             # MediaMTX configuration
 │   ├── mediamtx_client.py       # MediaMTX API client
 │   └── utils/

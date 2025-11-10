@@ -89,7 +89,6 @@ Camera/RTSP → GStreamer (decode→AI→overlay→encode) → MediaMTX (RTMP) �
 
 **GStreamer Pipeline:**
 ```
-Video:
   source !
   decodebin ! 
   videoconvert ! 
@@ -100,6 +99,16 @@ Video:
   rtmpsink location={self.rtmp_base}/{webrtc_path}
 
 ```
+
+**Gstreamer with AI Processing:**
+```
+   source !
+   decodebin !
+   videoconvert ! video/x-raw,format=BGR !
+   clockoverlay time-format="%Y-%m-%d %H:%M:%S" halignment=right valignment=bottom shaded-background=true !
+   appsink name=ai_sink emit-signals=true max-buffers=1 drop=true sync=false
+
+   Appsink callback -> AI Processing (YOLOv8) -> Overlay boxes -> Encode -> RTMP (using ffmpeg)
 
 ### 3.3 MongoDB
 

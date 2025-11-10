@@ -44,7 +44,7 @@ services:
     # networks:
     #   - streaming-net
     network_mode: "host"
-    command: ["/bin/bash", "-c", "tail -f /dev/null"]
+    # command: ["/bin/bash", "-c", "tail -f /dev/null"]
 
   ui:
     build: ./ui
