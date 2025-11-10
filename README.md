@@ -26,6 +26,7 @@ See `DESIGN.md` for complete architecture documentation.
 ```bash
 ./start_server.sh
 ```
+
    
 2. Open UI Dashboard:
 ```bash
