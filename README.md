@@ -11,6 +11,8 @@ Implementation for live video streaming
 - **Database**: MongoDB for maintaining stream metadata
 - **Deployment**: Docker Compose with 3 services
 
+![Architecure](Architecture.jpg)
+
 See `DESIGN.md` for complete architecture documentation.
 
 ## Quick Start
