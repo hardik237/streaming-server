@@ -1,12 +1,13 @@
 # Live Video Streaming Solution
 
-Assignment implementation for live video streaming
+Implementation for live video streaming
 
 ## Architecture
 
 - **UI**: Streamlit frontend for source selection, live view, controls
 - **Streaming**: MediaMTX for multi-protocol streaming (RTMP/HLS/WebRTC)
 - **Pipeline**: GStreamer for video processing
+- **AI**: Ultralytics YOLOv8 for real-time object detection
 - **Database**: MongoDB for maintaining stream metadata
 - **Deployment**: Docker Compose with 3 services
 
@@ -20,33 +21,36 @@ See `DESIGN.md` for complete architecture documentation.
 
 ### Setup
 
-1. Clone:
-```bash
-git clone <repository_url>
-```
-   
-2. Start services:
+1. Start Server:
 - This will pull necessary images and start all containers in detached mode.
 ```bash
-docker-compose up -d
+./start_server.sh
+```
+   
+2. Open UI Dashboard:
+```bash
+
+http://<system-ip-address>:8501
 ```
 
-3. Access UI:
+3. Stop Server:
+```bash
+./stop_server.sh
 ```
-http://localhost:8501
-```
+ 
 
 ### Services
 
-- **UI**: http://localhost:8501 (Streamlit)
-- **Streaming API**: http://localhost:5000
-- **MediaMTX**:
-  - RTMP: rtmp://localhost:1935
-  - RTSP: rtsp://localhost:8554
-  - HLS: http://localhost:8888
-  - WebRTC: http://localhost:8889
-  - API: http://localhost:9997
-- **MongoDB**: mongodb://localhost:27017
+- **streaming-ui**: http://localhost:8501 (Streamlit)
+- **streaming-service**: http://localhost:5000 (Flask REST Server)
+   - **MediaMTX**:
+     - RTMP: rtmp://localhost:1935
+     - HLS: http://localhost:8888
+     - WebRTC: http://localhost:8889
+     - API: http://localhost:9997
+     - Playback: http://localhost:9996
+- **streaming-mongo**: mongodb://localhost:27017 (Mongo database)
+- **mediamtx-rtsp-server**: http://localhost:9554 (Dummy RTSP Server for local testing)
 
 ## Usage
 
@@ -103,9 +107,8 @@ streaming-server/
 
 ## Future Enhancements
 
-- AI-based analytics (object detection)
-- Object based search in recordings
+- Object-based search in recordings
 
 ## License
 
-Open source components used under their respective licenses.
+Open source components are used under their respective licenses.
